@@ -1,0 +1,7 @@
+{
+    "python.pythonPath": "/home/derick/.venv/securities/bin/python3.8",
+    "python.linting.pylintEnabled": true,
+    "python.linting.flake8Enabled": false,
+    "python.linting.enabled": false,
+    "python.linting.pylintUseMinimalCheckers": false
+}
