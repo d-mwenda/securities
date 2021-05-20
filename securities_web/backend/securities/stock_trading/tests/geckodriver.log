@@ -1,0 +1,48 @@
+1621072745789	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofilePB5h0O"
+1621072746560	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1621072748823	Marionette	INFO	Listening on port 35319
+1621072748933	Marionette	WARN	TLS certificate errors will be ignored for this session
+1621072749230	Marionette	INFO	Stopped listening on port 35319
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1621072768796	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofiledZqD5p"
+1621072769507	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1621072771712	Marionette	INFO	Listening on port 32957
+1621072771832	Marionette	WARN	TLS certificate errors will be ignored for this session
+1621072917260	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofile4lQWPU"
+1621072917927	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1621072920215	Marionette	INFO	Listening on port 45525
+1621072920289	Marionette	WARN	TLS certificate errors will be ignored for this session
+1621072994340	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileGcDkDR"
+1621072995035	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1621072997258	Marionette	INFO	Listening on port 36955
+1621072997387	Marionette	WARN	TLS certificate errors will be ignored for this session
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x1F0011,name=PBackgroundStorage::Msg_Observe) Channel error: cannot send/recv
+
+
+###!!! [Parent][MessageChannel] Error: (msgtype=0x1F0011,name=PBackgroundStorage::Msg_Observe) Channel error: cannot send/recv
+
+1621073007928	Marionette	INFO	Stopped listening on port 36955
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1621073014875	Marionette	INFO	Stopped listening on port 32957
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
+1621073016135	Marionette	INFO	Stopped listening on port 45525
+1621073034319	mozrunner::runner	INFO	Running command: "/usr/bin/firefox" "-marionette" "-foreground" "-no-remote" "-profile" "/tmp/rust_mozprofileVAXD2r"
+1621073035024	Marionette	INFO	Marionette enabled
+console.warn: SearchSettings: "get: No settings file exists, new profile?" (new Error("", "(unknown module)"))
+1621073037255	Marionette	INFO	Listening on port 39517
+1621073037355	Marionette	WARN	TLS certificate errors will be ignored for this session
+1621073266080	Marionette	INFO	Stopped listening on port 39517
+
+###!!! [Parent][RunMessage] Error: Channel closing: too late to send/recv, messages will be lost
+
