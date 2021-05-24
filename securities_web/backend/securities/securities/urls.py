@@ -17,10 +17,17 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
 
-from stock_trading.urls import urlpatterns
+from stock_trading.urls import urlpatterns as stock_trading_urls
+from stock_trading.urls import api_urlpatterns as stock_trading_api_urls
+
+
+api_urlpatterns = [
+    path("stock-trading/", include(stock_trading_api_urls))
+]
 
 urlpatterns = [
     path("", RedirectView.as_view(pattern_name="bourse_summary")),
     path("admin/", admin.site.urls),
-    path("stock-trading/", include(urlpatterns), name="stock_trading")
+    path("api/", include(api_urlpatterns)),
+    path("stock-trading/", include(stock_trading_urls), name="stock_trading"),
 ]
