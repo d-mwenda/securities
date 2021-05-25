@@ -3,7 +3,7 @@ from django.views.generic.base import View
 from django.views.generic import DetailView
 from django.shortcuts import render
 
-from .models import Stockexchangecompany
+from .models import  Company, SecuritiesExchange, HistoricalStockData, LiveStockData
 
 
 class BourseSummaryView(DetailView):
@@ -19,7 +19,7 @@ class CompanyStockView(DetailView):
     """Process view of a company stock profile"""
     slug_field = "symbol"
     slug_url_kwarg = "ticker"
-    model = Stockexchangecompany
+    model = Company
     context_object_name = "company"
     template_name = "stock_trading/company_stock.html"
 
@@ -55,7 +55,7 @@ class BourseSummaryAPIView(View):
         Args:
             request (HttpRequest): An object representing an HTTP Request.
         """
-        queryset = StockExchange.objects.filter(
+        queryset = SecuritiesExchange.objects.filter(
             stock_exchange_id__slug=kwargs.get("bourse"),
             country_id__slug=kwargs.get("country")
         )
