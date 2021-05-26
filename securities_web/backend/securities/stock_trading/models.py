@@ -12,10 +12,21 @@ class AlembicVersion(models.Model):
         db_table = 'alembic_version'
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=30)
+
+    class Meta:
+        managed = False
+        db_table = 'category'
+
+
 class Company(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=30)
     ticker_symbol = models.CharField(max_length=10)
+    isin_code = models.CharField(db_column='ISIN_CODE', max_length=15, blank=True, null=True)  # Field name made lowercase.
     securities_exchange = models.ForeignKey('SecuritiesExchange', models.DO_NOTHING)
+    shares_issued = models.IntegerField(blank=True, null=True)
+    category = models.ForeignKey(Category, models.DO_NOTHING, blank=True, null=True)
     profile = models.TextField(blank=True, null=True)
 
     class Meta:
@@ -62,10 +73,11 @@ class LiveStockData(models.Model):
 class SecuritiesExchange(models.Model):
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=10)
-    timezone = models.CharField(max_length=30, blank=True, null=True)
+    timezone = models.CharField(max_length=15, blank=True, null=True)
     country = models.ForeignKey(Country, models.DO_NOTHING)
     profile = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'securities_exchange'
+

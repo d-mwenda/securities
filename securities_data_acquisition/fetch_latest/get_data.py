@@ -6,7 +6,7 @@ import logging
 import requests
 from requests.structures import CaseInsensitiveDict
 
-from ..db import (Session, Company, HistoricalStockData, LiveStockData,
+from db import (Session, Company, HistoricalStockData, LiveStockData,
     SecuritiesExchange, Country)
 
 logger = logging.getLogger("nse_fetch_latest")
@@ -107,8 +107,8 @@ def execute():
     
     data = parse(response.content)
 
-    if market_status(data) == "open":
-        to_db(data)
+    # if market_status(data) == "open":
+    to_db(data)
 
     
     print("...end")
