@@ -7,7 +7,7 @@ import scrapy
 from scrapy.selector import Selector
 from scrapy.loader import ItemLoader
 
-from nse.items import SEItem
+from ..items import SEItem
 
 
 class KwayisiSpider(scrapy.Spider):
@@ -22,9 +22,14 @@ class KwayisiSpider(scrapy.Spider):
     parse data
     store into db date, price, stock exchange (FK relationship)
     """
-    name = 'kwayisi'
-    allowed_domains = ['afx.kwayisi.org']
-    start_urls = ['http://afx.kwayisi.org/nseke/']
+    name = "kwayisi"
+    allowed_domains = ["fx.kwayisi.org"]
+    start_urls = ["http://afx.kwayisi.org/nseke/"]
+    custom_settings = {
+        "ITEM_PIPELINES" : {
+            "scrape_historical.pipelines.SaveStocksPipeline": 300,
+        }
+    }
 
     logger = logging.getLogger("kwayisi")
 

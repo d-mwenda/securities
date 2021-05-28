@@ -1,4 +1,7 @@
 **/__pycache__/**
 **.pyc
-*settings.py
 *db.sqlite3
+**/.vscode
+*.db
+*.db-journal
+**/securities/settings.py
