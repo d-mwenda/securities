@@ -78,7 +78,7 @@ class Company(models.Model):
         """
         qs = self.trading_history.all().order_by("-date").values("closing_price")[:2]
         last_prices = [price["closing_price"] for price in qs]
-        change = last_prices[0] - last_prices[1]
+        change = round(last_prices[0] - last_prices[1], 2)
         percentage_change = round((change / last_prices[1]) * 100, 2)
         return change, percentage_change
 

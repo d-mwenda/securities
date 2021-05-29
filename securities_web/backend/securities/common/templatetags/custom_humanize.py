@@ -17,9 +17,12 @@ def shortintword(value):
     value = intword(value)
 
     for word in words:
-        if bool(re.search(word[0], value)):
-            value = re.sub(word[0], word[1], value)
-            break
+        try:
+            if bool(re.search(word[0], value)):
+                value = re.sub(word[0], word[1], value)
+                break
+        except TypeError:
+            pass
     return value
 
 

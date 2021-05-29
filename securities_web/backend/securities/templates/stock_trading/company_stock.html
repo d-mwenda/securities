@@ -34,7 +34,7 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">App Template</a>
+                <a class="navbar-brand" href="#">All Africa Securities</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsible-nav" aria-controls="collapsible-nav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -58,7 +58,7 @@
                     <div class="card-body" data-price>
                         <p class="card-text">Price</p>
                         <span class="card-text fs-6">Kes</span>
-                        <span class="card-text fs-3">{{company.latest_price}}</span>
+                        <span class="card-text fs-4">{{company.latest_price}}</span>
                     </div>
                 </div>
             </div>
@@ -66,8 +66,8 @@
                 <div class="card border-0">
                     <div class="card-body" data-price>
                         <p class="card-text">Change</p>
-                        <span class="card-text fs-3">{{company.price_change.0}}</span>
-                        <span class="card-text fs-3">({{company.price_change.1}}&#37;)</span>
+                        <span class="card-text fs-4">{{company.price_change.0}}</span>
+                        <span class="card-text fs-4">({{company.price_change.1}}&#37;)</span>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                     <div class="card-body" data-market-cap>
                         <p class="card-text">Market Cap</p>
                         <span class="card-text fs-6">Kes</span>
-                        <span class="card-text fs-3">{{company.market_cap | shortintword}}</span>
+                        <span class="card-text fs-4">{{company.market_cap | shortintword}}</span>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                 <div class="card border-0">
                     <div class="card-body">
                         <p class="card-text">Volume</p>
-                        <span class="card-text fs-3">{{company.latest_trading_volume |  shortintword}}</span>
+                        <span class="card-text fs-4">{{company.latest_trading_volume |  shortintword | intcomma}}</span>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 <div class="card border-0">
                     <div class="card-body">
                         <p class="card-text">Day Range (FIX ME)</p>
-                        <span class="card-text fs-3">28.1 - 43.55</span>
+                        <span class="card-text fs-4">28.1 - 43.55</span>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
                 <div class="card border-0">
                     <div class="card-body">
                         <p class="card-text">52 Week Range</p>
-                        <span class="card-text fs-3">{{company.year_range.0}} - {{company.year_range.1}}</span>
+                        <span class="card-text fs-4">{{company.year_range.0}} - {{company.year_range.1}}</span>
                     </div>
                 </div>
             </div>

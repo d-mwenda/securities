@@ -1,8 +1,9 @@
+from datetime import timedelta
 from django.http.response import HttpResponse, JsonResponse
 from django.views.generic.base import View
 from django.views.generic import DetailView
 from django.shortcuts import render
-
+from django.utils import timezone
 from .models import  Company, SecuritiesExchange, HistoricalStockData, LiveStockData
 
 
@@ -38,11 +39,13 @@ class CompanyStockAPIView(View):
         Returns:
             HTTPResponse: HTTP JSON with historical data of the said ticker
         """
+        from_date = timezone.now().today() - timedelta(days=30)
         queryset = HistoricalStockData.objects.filter(
             company__ticker_symbol=kwargs.get("ticker"),
             company__securities_exchange__slug=kwargs.get("bourse"),
-            company__securities_exchange__country__slug=kwargs.get("country")
-        ).order_by("-date")[:25]
+            company__securities_exchange__country__slug=kwargs.get("country"),
+            date__gte=from_date
+        ).order_by("-date")
         queryset = queryset.values("date", "closing_price")
         queryset = list(queryset)
         print(queryset)
