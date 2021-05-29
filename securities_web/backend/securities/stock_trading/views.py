@@ -17,7 +17,7 @@ class BourseSummaryView(DetailView):
 
 class CompanyStockView(DetailView):
     """Process view of a company stock profile"""
-    slug_field = "symbol"
+    slug_field = "ticker_symbol"
     slug_url_kwarg = "ticker"
     model = Company
     context_object_name = "company"
@@ -38,12 +38,15 @@ class CompanyStockAPIView(View):
         Returns:
             HTTPResponse: HTTP JSON with historical data of the said ticker
         """
-        # queryset = CompanyStockHistory.objects.filter(
-        #     company_id__ticker_symbol=kwargs.get("ticker"),
-        #     stock_exchange_id__slug=kwargs.get("bourse"),
-        #     country_id__slug=kwargs.get("country")
-        # )
-        return JsonResponse({"EQTY": "Equity Bank"})
+        queryset = HistoricalStockData.objects.filter(
+            company__ticker_symbol=kwargs.get("ticker"),
+            company__securities_exchange__slug=kwargs.get("bourse"),
+            company__securities_exchange__country__slug=kwargs.get("country")
+        ).order_by("-date")[:25]
+        queryset = queryset.values("date", "closing_price")
+        queryset = list(queryset)
+        print(queryset)
+        return JsonResponse(queryset, safe=False)
 
 
 class BourseSummaryAPIView(View):
