@@ -158,8 +158,6 @@ class SecuritiesExchange(models.Model):
         for company in companies:
             if company.price_change is not None:
                 price_changes.append((company ,company.price_change))
-
-        print(price_changes)
         return sorted(price_changes, key=lambda item: item[1][1],
         reverse=True)
 
