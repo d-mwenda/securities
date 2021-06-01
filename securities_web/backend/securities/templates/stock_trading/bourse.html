@@ -1,0 +1,121 @@
+{% extends "base.html" %} {% load custom_humanize %} {% block content %}
+<div class="container text-center pt-5">
+    <h1 class="mt-5" data-country="{{securities_exchange.country.slug}}" data-bourse="{{securities_exchange.slug}}">{{securities_exchange.name}}</h1>
+</div>
+<div class="row justify-content-center py-4 text-center">
+    <div class="col-xs-8 col-md-8 col-lg-4">
+        <div class="card border-0">
+            <span class="card-text fs-4">Gainers</span>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Company</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gainer in securities_exchange.gainers %}
+                    <tr>
+                        <td class="text-start"><a class="text-decoration-none" href="{% url 'company_stock' country=securities_exchange.country.slug bourse=securities_exchange.slug ticker=gainer.0.ticker_symbol %}">{{gainer.0.name}}</a></td>
+                        <td>{{gainer.0.latest_price}}</td>
+                        <td class="text-success">{{gainer.1.1}}&nbsp;&#37;&nbsp;&#8593;</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-8 col-md-8 col-lg-4">
+        <div class="card border-0">
+            <span class="card-text fs-4">Loser</span>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Company</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Change</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loser in securities_exchange.losers %}
+                    <tr>
+                        <td class="text-start"><a class="text-decoration-none" href="{% url 'company_stock' country=securities_exchange.country.slug bourse=securities_exchange.slug ticker=loser.0.ticker_symbol %}">{{loser.0.name}}</a></td>
+                        <td>{{loser.0.latest_price}}</td>
+                        <td class="text-danger">{{loser.1.1}}&nbsp;&#37;&nbsp;&#8595;</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="col-xs-4 col-md-8 col-lg-4">
+        <div class="card border-0">
+            <span class="card-text fs-4">Movers</span>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Company</th>
+                        <th scope="col">Volume</th>
+                        <th scope="col" class="text-nowrap">Market Cap</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for mover in securities_exchange.movers %}
+                    <tr>
+                        <td class="text-start"><a class="text-decoration-none" href="{% url 'company_stock' country=securities_exchange.country.slug bourse=securities_exchange.slug ticker=mover.ticker_symbol %}">{{mover.name}}</a></td>
+                        <td>{{mover.latest_trading_volume | shortintword}}</td>
+                        <td>{{mover.market_cap | shortintword}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center py-4 text-center">
+    <div class="col-xs-12 col-lg-8">
+        <p class="card-text fs-4 mb-10">All Listed Companies</p>
+        <table class="table table-hover all-listings">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-start">Company</th>
+                    <th scope="col" class="text-start">Latest Closing Price</th>
+                    <th scope="col" class="text-start">Price Change</th>
+                    <th scope="col" class="text-start">Market Capitalization</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in securities_exchange.companies.all %} {% if company.latest_price != None %}
+                <tr>
+                    <td class="text-start"><a class="text-decoration-none" href="{% url 'company_stock' country=securities_exchange.country.slug bourse=securities_exchange.slug ticker=company.ticker_symbol %}">{{company.name}}</a></td>
+                    <td class="text-start">{{company.latest_price}}</td>
+                    <td class="text-start"><span>{{company.price_change.0}}</span>&nbsp;({{company.price_change.1}}&#37;)</td>
+                    <td class="text-start">{{company.market_cap | shortintword}}</td>
+                </tr>
+                {% endif %} {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %} {% block custom_scripts %}
+<script>
+    $(document).ready(function() {
+        let rows = $(".all-listings").children("tbody").children("tr");
+        rows.each(function() {
+            cell = $(this).children("td:nth-child(3)");
+            value = parseFloat(cell.children("span").text());
+            if (value > 0) {
+                cell.addClass("text-success");
+                cell.append("&nbsp;&#8593;")
+            } else {
+                cell.addClass("text-danger");
+                cell.append("&nbsp;&#8595;")
+            }
+        });
+    });
+</script>
+{% endblock custom_scripts %}

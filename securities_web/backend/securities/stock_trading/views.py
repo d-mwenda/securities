@@ -8,12 +8,16 @@ from .models import  Company, SecuritiesExchange, HistoricalStockData, LiveStock
 
 
 class BourseSummaryView(DetailView):
-    """[summary]
+    """Process the request for a securities exchange.
 
     Args:
-        DetailView ([type]): [description]
+        DetailView (Django View): Extends Django's DetailView.
     """
-    pass
+    template_name = "stock_trading/bourse.html"
+    slug_field = "slug"
+    slug_url_kwarg = "bourse"
+    model = SecuritiesExchange
+    context_object_name = "securities_exchange"
 
 
 class CompanyStockView(DetailView):
