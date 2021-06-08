@@ -74,17 +74,13 @@ def to_db(data):
     for ticker in tickers:
         issuer = ticker["issuer"]
         dataset[issuer] = LiveStockData()
-        # company = session.query(Company).filter_by(ticker_symbol=issuer).first()
+        company = session.query(Company).filter_by(ticker_symbol=issuer).first()
 
-        # if company is not None:
-        #     dataset[issuer].company = company
-        # else:
-                # dataset[issuer].company
-        dataset[issuer].company = issuer
-        dataset[issuer].date = datetime.today().date(),
-        dataset[issuer].time = datetime.now().time(),
-        dataset[issuer].price = ticker["price"]
-        session.add(dataset[issuer])
+        if company is not None:
+            dataset[issuer].company = company
+            dataset[issuer].date_time = datetime.now(),
+            dataset[issuer].price = ticker["price"]
+            session.add(dataset[issuer])
 
     try:
         session.commit()
@@ -107,8 +103,8 @@ def execute():
     
     data = parse(response.content)
 
-    # if market_status(data) == "open":
-    to_db(data)
+    if market_status(data) == "open":
+        to_db(data)
 
     
     print("...end")
