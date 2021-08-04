@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.db import models
 from django.utils import timezone
@@ -34,6 +34,9 @@ class Company(models.Model):
         managed = False
         db_table = "company"
         ordering = ["category"]
+    
+    def __str__(self) -> str:
+        return self.name
     
     @property
     def year_range(self):
@@ -79,16 +82,7 @@ class Company(models.Model):
         except IndexError:
             # TODO Log as error
             return None
-    
-    @property
-    def day_range(self):
-        # Get 52 week range
-        from_date = timezone.now().today()
-        qs = self.intra_day_trading.filter().values("price")
-        prices = [price["closing_price"] for price in qs]
-        range_ = (min(prices), max(prices))
-        return range_
-    
+
     @property
     def price_change(self):
         """Change in price between the last 2 trading days.
@@ -102,6 +96,106 @@ class Company(models.Model):
         except IndexError:
             # TODO Log as error
             return None
+    
+    @property
+    def day_range(self):
+        # Get day range
+        from_date = timezone.now().today()
+        # TODO filter date
+        if self.last_trading_day() is None:
+            return None
+        print(f"This stock was last traded on {self.last_trading_day()}")
+        qs = self.intra_day_trading.filter(date_time=self.last_trading_day()).values("price")
+        print(bool(qs))
+        for q in qs:
+            print(q)
+        prices = [price["price"] for price in qs]
+        range_ = (min(prices, 0), max(prices, 0))
+        range_=(0,1)
+        return range_
+    
+    @property
+    def day_high(self, day=None):
+        """Get the highest price a stock traded during a certain day.
+
+        Args:
+            day (date, optional): the datetime object for the day for
+            which to evaluate the highest price. Defaults to None.
+            If None, get the highest price for the latest available day.
+
+        Returns:
+            float: value for the highest price
+            None if data is unavailable
+        """
+        trading_day = day or self.last_trading_day
+        qs = self.intra_day_trading.filter(day_time__gte=trading_day)
+        
+        return price
+
+    # @property
+    def last_trading_day(self, day_time=None):
+        """Get the last day when a stock was traded.
+
+        Args:
+            day_time (datetime, optional):  Defaults to None.
+
+        Returns:
+            datetime: Datetime object of the last day the company's stock
+            was traded.
+        """
+        # TODO make it timezone aware
+        if day_time is None:
+            today = timezone.now().date()
+            day_time = timezone.datetime(today.year, today.month, today.day)
+        qs = self.intra_day_trading.filter(date_time__gte=day_time)
+        if qs.count() < 1:
+            try:
+                day_time -= timedelta(days=1)
+                self.last_trading_day(day_time=day_time)
+            except RecursionError:
+                return None
+        return day_time
+    
+    @property
+    def day_high(self):
+        pass
+
+    @property
+    def day_low(self, day=None):
+        """Get the lowest price a stock traded during a certain day.
+
+        Args:
+            day (date, optional): The day for which to evaluate the
+            lowest price. Defaults to None. If None, get the lowest
+            for the latest available day.
+
+        Returns:
+            float: lowest price
+            None if data is unavailable
+        """
+        pass
+
+    @property
+    def dividend(self, fiscal_period=None):
+        """Get the latest dividend, for when and kind of financial period.
+
+        Args:
+            fiescal period (optional): Period for which to to get the dividend.
+            If None, get the lastest. 
+        Returns:
+            dict: dictionary of amount, which fiscal period e.g. 2021 and
+            kind of fiscal period e.g. half year or final annual.
+        """
+        pass
+
+    def dividend_yield(self):
+        pass
+
+    def divident_ratio(self):
+        pass
+
+    def retention_ratio(self):
+        pass
 
 
 class Country(models.Model):
