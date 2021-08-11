@@ -105,13 +105,12 @@ class Company(models.Model):
         if self.last_trading_day() is None:
             return None
         print(f"This stock was last traded on {self.last_trading_day()}")
-        qs = self.intra_day_trading.filter(date_time=self.last_trading_day()).values("price")
+        qs = self.intra_day_trading.filter(date_time__gt=self.last_trading_day()).values("price")
         print(bool(qs))
         for q in qs:
             print(q)
         prices = [price["price"] for price in qs]
-        range_ = (min(prices, 0), max(prices, 0))
-        range_=(0,1)
+        range_ = (min(prices, default=0), max(prices, default=0))
         return range_
     
     @property
