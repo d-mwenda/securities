@@ -48,7 +48,7 @@ class Company(models.Model):
             prices = [price["closing_price"] for price in qs]
             range_ = (min(prices), max(prices))
             return range_
-        except IndexError:
+        except (IndexError, ValueError):
             # TODO Log as error
             return None
 
