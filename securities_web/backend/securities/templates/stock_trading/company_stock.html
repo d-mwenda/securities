@@ -1,10 +1,17 @@
-{% extends "base.html" %} {% load humanize %} {% load custom_humanize %} {% block content %}
-<div class="container text-center pt-5">
-    <h1 class="mt-5" data-country="{{company.securities_exchange.country.slug}}" data-bourse="{{company.securities_exchange.slug}}" data-ticker="{{company.ticker_symbol}}">{{company.name}}</h1>
+{% extends "base.html" %} {% load humanize %} {% load custom_humanize %} {% block title %}
+
+<div class="title">
+    <div class="overlay mt-5 p-3">
+        <h1 data-country="{{company.securities_exchange.country.slug}}" data-bourse="{{company.securities_exchange.slug}}" data-ticker="{{company.ticker_symbol}}">{{company.name}}</h1>
+    </div>
 </div>
-<div class="row justify-content-center py-4 text-center">
-    <div class="col-xs-6 col-md-2">
-        <div class="card border-0">
+{% endblock title %} {% block content %}
+<!-- <div class="container text-center pt-5">
+    <h1 class="mt-5" data-country="{{company.securities_exchange.country.slug}}" data-bourse="{{company.securities_exchange.slug}}" data-ticker="{{company.ticker_symbol}}">{{company.name}}</h1>
+</div> -->
+<div class="row justify-content-center py-4 text-center mb-4">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 mb-4">
+        <div class="card border-0 shadow company-metrics-card">
             <div class="card-body" data-price>
                 <p class="card-text">Price</p>
                 <span class="card-text fs-6">Kes</span>
@@ -12,8 +19,8 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-6 col-md-2">
-        <div class="card border-0">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 mb-4">
+        <div class="card border-0 shadow company-metrics-card">
             <div class="card-body" data-price>
                 <p class="card-text">Change</p>
                 <span class="card-text fs-4">{{company.price_change.0}}</span>
@@ -21,8 +28,8 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-6 col-md-2">
-        <div class="card border-0">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 mb-4">
+        <div class="card border-0 shadow company-metrics-card">
             <div class="card-body" data-market-cap>
                 <p class="card-text">Market Cap</p>
                 <span class="card-text fs-6">Kes</span>
@@ -30,24 +37,24 @@
             </div>
         </div>
     </div>
-    <div class="col-xs-6 col-md-2">
-        <div class="card border-0">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 mb-4">
+        <div class="card border-0 shadow company-metrics-card">
             <div class="card-body">
                 <p class="card-text">Volume</p>
                 <span class="card-text fs-4">{{company.latest_trading_volume |  shortintword | intcomma}}</span>
             </div>
         </div>
     </div>
-    <div class="col-xs-6 col-md-2">
-        <div class="card border-0">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 mb-4">
+        <div class="card border-0 shadow company-metrics-card">
             <div class="card-body">
                 <p class="card-text">Day Range</p>
                 <span class="card-text fs-4">{{company.day_range.0}} - {{company.day_range.1}}</span>
             </div>
         </div>
     </div>
-    <div class="col-xs-6 col-md-2">
-        <div class="card border-0">
+    <div class="col-xs-6 col-sm-6 col-md-3 col-lg-2 mb-4">
+        <div class="card border-0 shadow company-metrics-card">
             <div class="card-body">
                 <p class="card-text">52 Week Range</p>
                 <span class="card-text fs-4">{{company.year_range.0}} - {{company.year_range.1}}</span>
@@ -55,13 +62,13 @@
         </div>
     </div>
 </div>
-<div class="row justify-content-center">
-    <div class="col-xs-12 col-md-8">
+<div class="row justify-content-center mx-1 mb-3">
+    <div class="col-xs-12 col-md-8 price-graph shadow-lg p-5">
         <canvas id="myChart" width="800" height="400"></canvas>
     </div>
 </div>
-<div class="row justify-content-center mt-5">
-    <div class="col-xs-12 col-sm-6 col-md-4">
+<div class="row justify-content-center my-5">
+    <div class="col-xs-12 col-sm-6 col-md-4 company-annual-metrics shadow">
         <table class="table table-borderless">
             <tbody>
                 <tr>
