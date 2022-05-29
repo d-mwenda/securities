@@ -92,3 +92,4 @@ ROBOTSTXT_OBEY = True
 # HTTPCACHE_IGNORE_HTTP_CODES = []
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+CONNECTION_STRING = "postgresql+psycopg2://securities_dba:Y3ZmfAIpRhqhteBOtV7F@localhost/securities"
