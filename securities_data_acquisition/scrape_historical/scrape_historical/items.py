@@ -51,32 +51,33 @@ class MystockKeItem(scrapy.Item):
                           convert_to_float), output_processor=TakeFirst())
 
 
+def process_isin_code(string):
+    """Strip the 'ISIN CODE:' part to remain with the actual ISIN code"""
+    return string[10:]
+
+
+def process_ticker_symbol(string):
+    """Strip the part 'Trading Symbol:' to remain with the actual symbol"""
+    return string[15:]
+
+
+def process_company_name(string):
+    """strip the share type part of the name
+    for example: in Safaricom PLC Ord 0.05 return Safaricom PLC
+    """
+
+    x = re.search("\sOrd", string)
+    if x is not None:
+        name_ends_at = (x.span()[0])
+        return string[0:name_ends_at]
+    else:
+        return string
+
+
 class KENSEItem(scrapy.Item):
-    @staticmethod
-    def process_isin_code(string):
-        """Strip the 'ISIN CODE:' part to remain with the actual ISIN code"""
-        return string[10:]
-
-    @staticmethod
-    def process_ticker_symbol(string):
-        """Strip the part 'Trading Symbol:' to remain with the actual symbol"""
-        return string[15:]
-
-    @staticmethod
-    def process_company_name(string):
-        """strip the share type part of the name
-        for example: in Safaricom PLC Ord 0.05 return Safaricom PLC
-        """
-        x = re.search("\sOrd", string)
-        if x is not None:
-            name_ends_at = (x.span()[0])
-            return string[0:name_ends_at]
-        else:
-            return string
-
     ticker_symbol = scrapy.Field(input_processor=MapCompose(
-                                                    process_ticker_symbol
-                                                ),
+                                                process_ticker_symbol
+                                            ),
                                  output_processor=TakeFirst())
     company_name = scrapy.Field(input_processor=MapCompose(
                                                     process_company_name
