@@ -14,15 +14,20 @@ logger = logging.getLogger("mystock_ke")
 
 
 class MystocksKeSpider(scrapy.Spider):
+    """Scrape available daily stock data from live.mystocks.co.ke
+    """
     name = "mystocks_ke"
     allowed_domains = ["live.mystocks.co.ke"]
-    start_urls = ["http://live.mystocks.co.ke/price_list/20060911"]
     custom_settings = {
         "ITEM_PIPELINES": {
             'scrape_historical.pipelines.SaveMyStocksKePipeline': 300,
         },
-        "DOWNLOAD_DELAY" : 5
+        "DOWNLOAD_DELAY": 5
     }
+
+    def __init__(self, date="20060911", *args, **kwargs):
+        self.start_urls = [f"http://live.mystocks.co.ke/price_list/{date}"]
+        super().__init__(*args, **kwargs)
 
     def parse(self, response):
         """
@@ -64,11 +69,9 @@ class MystocksKeSpider(scrapy.Spider):
                     i = item_loader.load_item()
                     print(i.keys)
                     yield item_loader.load_item()
-            
 
         # build next url and follow
         next_day = next_trading_day(trading_date)
         next_url = re.sub("[0-9]+$", next_day.strftime("%Y%m%d"), response.url)
         print(next_url)
         yield response.follow(next_url, self.parse)
-
