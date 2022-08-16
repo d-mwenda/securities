@@ -16,9 +16,9 @@ urlpatterns = [
 
 api_urlpatterns = [
     path("<country>/<bourse>", BourseSummaryAPIView.as_view(),
-        name="company_stock_api"
-        ),
-    path("<country>/<bourse>/<ticker>", CompanyStockAPIView.as_view(),
-        name="company_stock_api"
-        ),
+         name="company_stock_api"
+         ),
+    path("<country>/<bourse>/<ticker>/<period>", CompanyStockAPIView.as_view(),
+         name="company_stock_api"
+         ),
 ]

@@ -63,8 +63,21 @@
     </div>
 </div>
 <div class="row justify-content-center mx-1 mb-3">
-    <div class="col-xs-12 col-md-8 price-graph shadow-lg p-5">
-        <canvas id="myChart" width="800" height="400"></canvas>
+    <div class="col-xs-12 col-md-8">
+        
+    </div>
+    <div class="col-xs-12 col-md-10 price-graph p-5 shadow-lg">
+        <div class="d-flex justify-content-between flex-wrap mb-3">
+            <button id="plot-1-month" type="button" class="plot-period btn btn-outline-secondary m-2">1 Month</button>
+            <button id="plot-3-months" type="button" class="plot-period btn btn-outline-secondary m-2">3 Months</button>
+            <button id="plot-6-months" type="button" class="plot-period btn btn-outline-secondary m-2">6 Months</button>
+            <button id="plot-12-months" type="button" class="plot-period btn btn-outline-secondary m-2">1 year</button>
+            <button id="plot-5-years" type="button" class="plot-period btn btn-outline-secondary m-2">5 years</button>
+            <button id="plot-all" type="button" class="plot-period btn btn-outline-secondary m-2">All time</button>
+        </div>
+        <div id="stock-price-div">
+            <canvas id="stock-price-chart" width="800" height="400"></canvas>
+        </div>
     </div>
 </div>
 <div class="row justify-content-center my-5">
@@ -97,20 +110,20 @@
 </div>
 {% endblock content %} {% block custom_scripts %}
 <script>
-    $(document).ready(function() {
+    function plotChart(plot_period) {
         let ticker = $("[data-ticker]").data("ticker");
         let bourse = $("[data-ticker]").data("bourse");
         let country = $("[data-ticker]").data("country");
+        let period = plot_period;
         let values;
         let labels = [];
         let prices = [];
 
         $.ajax({
-            url: '/api/stock-trading/' + country + '/' + bourse + '/' + ticker,
+            url: '/api/stock-trading/' + country + '/' + bourse + '/' + ticker + '/' + period,
             dataType: 'json',
             success: function(stock_data) {
-                console.log(stock_data);
-
+2
                 let labels = [];
                 let prices = [];
 
@@ -119,15 +132,17 @@
                 for (x of stock_data) {
                     labels.unshift(x['date']);
                     prices.unshift(x['closing_price']);
-                    console.log(x['date']);
-                    console.log(x['closing_price']);
                 }
                 const data = {
                     labels: labels,
                     datasets: [{
                         label: 'Stock Price History',
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
+                        fill: true,
+                        backgroundColor: 'rgb(227, 242, 253)',
+                        pointRadius: 0,
+                        borderWidth: 1,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.3,
                         data: prices,
                     }]
                 };
@@ -141,19 +156,28 @@
                 };
                 // </block:config>
 
-                // module.exports = {
-                //     actions: [],
-                //     config: config,
-                // };
-
-                var myChart = new Chart(
-                    document.getElementById('myChart'),
+                $("#stock-price-chart").remove();
+                $("#stock-price-div").append('<canvas id="stock-price-chart" width="800" height="400"></canvas>');
+                
+                let stock_chart_canvas = document.getElementById("stock-price-chart").getContext("2d");
+                var stock_chart = new Chart(
+                    stock_chart_canvas,
                     config
                 );
+
+
             }
-        });
+        }); //close ajax call
 
+    } //close plotChart
 
+    $(document).ready(
+        plotChart("one-month")
+    );
+
+    /* plot the chart depending on selected period*/
+    $(".plot-period").click(function(){
+        plotChart($(this).attr("id"));
     });
 </script>
 {% endblock custom_scripts %}

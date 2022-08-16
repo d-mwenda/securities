@@ -1,10 +1,9 @@
 from datetime import timedelta
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import JsonResponse
 from django.views.generic.base import View
 from django.views.generic import DetailView
-from django.shortcuts import render
 from django.utils import timezone
-from .models import  Company, SecuritiesExchange, HistoricalStockData, LiveStockData
+from .models import Company, SecuritiesExchange, HistoricalStockData
 
 
 class BourseSummaryView(DetailView):
@@ -33,7 +32,32 @@ class CompanyStockView(DetailView):
 
 
 class CompanyStockAPIView(View):
-    
+    """
+    Return the stock data for a company in JSON format
+    """
+    data_periods_mapping = {
+        "plot-1-month": 30,
+        "plot-3-months": 90,
+        "plot-6-months": 180,
+        "plot-12-months": 365,
+        "plot-5-years": 1825,
+        "plot-all": 0,
+    }
+
+    def get_from_date(self, data_period):
+        """Resolve the date from which to fetch the data.
+
+        Args:
+            data_period (string): the data period obtained from the url.
+        """
+        try:
+            days = self.data_periods_mapping[data_period]
+        except KeyError:
+            days = 30
+
+        from_date = timezone.now().today() - timedelta(days=days)
+        return from_date
+
     def get(self, request, *args, **kwargs):
         """Fetch company stock history.
 
@@ -43,22 +67,25 @@ class CompanyStockAPIView(View):
         Returns:
             HTTPResponse: HTTP JSON with historical data of the said ticker
         """
-        from_date = timezone.now().today() - timedelta(days=30)
+        data_period = kwargs.get("period")
+
         queryset = HistoricalStockData.objects.filter(
             company__ticker_symbol=kwargs.get("ticker"),
             company__securities_exchange__slug=kwargs.get("bourse"),
-            company__securities_exchange__country__slug=kwargs.get("country"),
-            date__gte=from_date
-        ).order_by("-date")
+            company__securities_exchange__country__slug=kwargs.get("country")
+        )
+        if data_period != "plot-all":
+            from_date = self.get_from_date(data_period)
+            queryset = queryset.filter(date__gte=from_date)
+
+        queryset = queryset.order_by("-date")
         queryset = queryset.values("date", "closing_price")
         queryset = list(queryset)
-        print(queryset)
         return JsonResponse(queryset, safe=False)
 
 
-class BourseSummaryAPIView(View):
-    
-    
+class BourseSummaryAPIView(View):  
+  
     def get(self, request, *args, **kwargs):
         """Process fetching latest Bourse Summary.
 
