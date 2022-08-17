@@ -7,9 +7,9 @@
         justify-content: center;
     }
     
-    .typing-demo {
-        width: 58ch;
-        animation: typing 10s steps(58), blink .3s step-end infinite alternate;
+    .typing-headline {
+        width: 38ch;
+        animation: typing 9.5s steps(38), blink .25s step-end infinite alternate;
         white-space: nowrap;
         overflow: hidden;
         border-right: 3px solid;
@@ -37,8 +37,8 @@
 {% endblock custom_styles %} {% block content %}
 <section>
     <div class="row headline">
-        <div class="typing-demo">
-            This is Africa, and African securities is our business...
+        <div class="typing-headline">
+            African securities is our business...
         </div>
     </div>
 </section>
@@ -46,8 +46,7 @@
     <div class="row  justify-content-center">
         <div class="col-md-8">
             <p class="text-center fs-3">
-                This site is for African publicly-traded securities. We are always work in progress - not cliche. We build as we go! It might not be here today but will be tomorrow. Wanted something you didn't find? The contact form is
-                also a suggestion box.
+                Find African publicly-traded securities. We are beginning with Nairobi Securities Exchange. Other exchanges will follow. Wanted an exchange you didn't find? The contact form is also a suggestion box.
             </p>
         </div>
     </div>
@@ -72,10 +71,15 @@
     </div>
 </section>
 <section>
-    <p class="text-center fs-3">
-        Enough banter, let's get down to work!
-    </p>
-    </div>
-    </div>
+    <div>
+        <p class="text-center fs-3">
+            Enough banter!
+        </p>
+    <div>
+    
+    <div>
+        <a href="{% url 'bourse_summary' country='ke' bourse='NSE' %}">
+            <button class="btn btn btn-outline-info">See the latest from Nairobi Securities Exhange</button></a>
+    <div>
 </section>
 {% endblock content %}
