@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.views import View
+from django.http import HttpResponse
 
 
 class HomeView(View):
     template_name = "index/home.html"
-    title_tag = "African Stock Markets | Share Price & Financials"
+    title_tag = "African Stock Markets | Share Prices & Financials"
 
     def get(self, request):
         return render(request, self.template_name, context=self.get_context())
@@ -16,5 +17,11 @@ class HomeView(View):
 
 
 class RobotsView(View):
+    """View to render robots.txt file"""
+    lines = [
+        "User-Agent: *",
+        "Allow: /"
+    ]
+
     def get(self, request):
-        pass
+        return HttpResponse("\n".join(self.lines), content_type="text/plain")
