@@ -18,6 +18,18 @@ class BourseSummaryView(DetailView):
     model = SecuritiesExchange
     context_object_name = "securities_exchange"
 
+    def get_title_tag(self, **kwargs):
+        """Get the title tag for the html template
+        """
+        title = {}
+        title["title_tag"] = self.get_object().name
+        return title
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx.update(self.get_title_tag())
+        return ctx
+
 
 class CompanyStockView(DetailView):
     """Process view of a company stock profile"""
@@ -27,8 +39,20 @@ class CompanyStockView(DetailView):
     context_object_name = "company"
     template_name = "stock_trading/company_stock.html"
 
-    # def get(self, request, *args, **kwargs):
-    #     return render(request,, {})
+    def get_title_tag(self, **kwargs):
+        """Get the title tag for the html template
+        """
+        title = {}
+        company = self.get_object()
+        title_tag = f"{company.name} {company.securities_exchange.slug} :\
+                    {company.ticker_symbol} share price"
+        title["title_tag"] = title_tag
+        return title
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx.update(self.get_title_tag())
+        return ctx
 
 
 class CompanyStockAPIView(View):
@@ -84,8 +108,8 @@ class CompanyStockAPIView(View):
         return JsonResponse(queryset, safe=False)
 
 
-class BourseSummaryAPIView(View):  
-  
+class BourseSummaryAPIView(View):
+
     def get(self, request, *args, **kwargs):
         """Process fetching latest Bourse Summary.
 
@@ -96,4 +120,4 @@ class BourseSummaryAPIView(View):
             stock_exchange_id__slug=kwargs.get("bourse"),
             country_id__slug=kwargs.get("country")
         )
-        return JsonResponse({"NSE": "Nairobi Stock Exchange"})
+        return JsonResponse(queryset)
