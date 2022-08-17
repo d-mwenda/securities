@@ -38,14 +38,13 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-light fixed-top " style="background-color: #e3f2fd;">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">All Africa Securities</a>
+                <a class="navbar-brand" href="{% url 'home' %}">All Africa Securities</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsible-nav" aria-controls="collapsible-nav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 <div class="collapse navbar-collapse justify-content-end" id="collapsible-nav">
                     <ul class="navbar-nav float-end">
-                        <li class="nav-item"><a class="nav-link " href="/stock-trading/ke/NSE">Nairobi Securities Exchange</a></li>
-                        <li class="nav-item"><a class="nav-link " href=" ">About</a></li>
+                        <li class="nav-item"><a class="nav-link " href="{% url 'bourse_summary' country='ke' bourse='NSE' %}">Nairobi Securities Exchange</a></li>
                         <li class="nav-item"><a class="nav-link " href=" " data-bs-toggle="modal" data-bs-target="#contactModal">Contact</a></li>
                     </ul>
                 </div>
