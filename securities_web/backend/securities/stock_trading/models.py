@@ -1,5 +1,6 @@
-from datetime import timedelta, datetime
+from datetime import timedelta
 
+from django.urls import reverse
 from django.db import models
 from django.utils import timezone
 
@@ -24,27 +25,33 @@ class Category(models.Model):
 class Company(models.Model):
     name = models.CharField(max_length=30)
     ticker_symbol = models.CharField(max_length=10)
-    isin_code = models.CharField(db_column='ISIN_CODE', max_length=15, blank=True, null=True)  # Field name made lowercase.
-    securities_exchange = models.ForeignKey('SecuritiesExchange', models.DO_NOTHING, related_name="companies")
+    isin_code = models.CharField(db_column='ISIN_CODE', max_length=15,
+                                 blank=True, null=True)
+    securities_exchange = models.ForeignKey('SecuritiesExchange',
+                                            models.DO_NOTHING,
+                                            related_name="companies"
+                                            )
     shares_issued = models.IntegerField(blank=True, null=True)
-    category = models.ForeignKey(Category, models.DO_NOTHING, blank=True, null=True, related_name="companies")
+    category = models.ForeignKey(Category, models.DO_NOTHING, blank=True,
+                                 null=True, related_name="companies")
     profile = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = "company"
         ordering = ["category"]
-    
+
     def __str__(self) -> str:
         return self.name
-    
+
     @property
     def year_range(self):
         # Get 52 week range
         try:
             time_in_year = timedelta(weeks=52)
             from_date = timezone.now().today() - time_in_year
-            qs = self.trading_history.filter(date__gte=from_date).values("closing_price")
+            qs = self.trading_history.filter(date__gte=from_date)
+            qs = qs.values("closing_price")
             prices = [price["closing_price"] for price in qs]
             range_ = (min(prices), max(prices))
             return range_
@@ -61,7 +68,7 @@ class Company(models.Model):
         except IndexError:
             # TODO Log as error
             return None
-    
+
     @property
     def market_cap(self):
         """Calculate the market capitalization of a company.
@@ -70,7 +77,7 @@ class Company(models.Model):
             return self.latest_price * self.shares_issued
         except:
             return None
-    
+
     @property
     def latest_trading_volume(self):
         """Return the last volume traded.
@@ -88,7 +95,8 @@ class Company(models.Model):
         """Change in price between the last 2 trading days.
         """
         try:
-            qs = self.trading_history.all().order_by("-date").values("closing_price")[:2]
+            qs = self.trading_history.all().order_by("-date")
+            qs = qs.values("closing_price")[:2]
             last_prices = [price["closing_price"] for price in qs]
             change = round(last_prices[0] - last_prices[1], 2)
             percentage_change = round((change / last_prices[1]) * 100, 2)
@@ -96,7 +104,7 @@ class Company(models.Model):
         except IndexError:
             # TODO Log as error
             return None
-    
+
     @property
     def day_range(self):
         # Get day range
@@ -112,7 +120,7 @@ class Company(models.Model):
         prices = [price["price"] for price in qs]
         range_ = (min(prices, default=0), max(prices, default=0))
         return range_
-    
+
     @property
     def day_high(self, day=None):
         """Get the highest price a stock traded during a certain day.
@@ -128,7 +136,6 @@ class Company(models.Model):
         """
         trading_day = day or self.last_trading_day
         qs = self.intra_day_trading.filter(day_time__gte=trading_day)
-        
         return price
 
     # @property
@@ -154,10 +161,6 @@ class Company(models.Model):
             except RecursionError:
                 return None
         return day_time
-    
-    @property
-    def day_high(self):
-        pass
 
     @property
     def day_low(self, day=None):
@@ -196,6 +199,15 @@ class Company(models.Model):
     def retention_ratio(self):
         pass
 
+    def get_absolute_url(self):
+        """
+        Unique and permanent url to the details of a Company Model instance
+        """
+        return reverse("company_stock",
+                       kwargs={"country": "ke",
+                               "bourse": self.securities_exchange.slug,
+                               "ticker": self.ticker_symbol})
+
 
 class Country(models.Model):
     name = models.CharField(max_length=50)
@@ -208,7 +220,8 @@ class Country(models.Model):
 
 class HistoricalStockData(models.Model):
     id = models.BigAutoField(primary_key=True)
-    company = models.ForeignKey(Company, models.DO_NOTHING, related_name="trading_history")
+    company = models.ForeignKey(Company, models.DO_NOTHING,
+                                related_name="trading_history")
     date = models.DateField()
     high_price = models.FloatField(blank=True, null=True)
     low_price = models.FloatField(blank=True, null=True)
@@ -223,7 +236,8 @@ class HistoricalStockData(models.Model):
 
 class LiveStockData(models.Model):
     id = models.BigAutoField(primary_key=True)
-    company = models.ForeignKey(Company, models.DO_NOTHING, related_name="intra_day_trading")
+    company = models.ForeignKey(Company, models.DO_NOTHING,
+                                related_name="intra_day_trading")
     date_time = models.DateTimeField()
     price = models.FloatField(blank=True, null=True)
     turnover = models.FloatField(blank=True, null=True)
@@ -250,9 +264,9 @@ class SecuritiesExchange(models.Model):
         companies = self.companies.all()
         for company in companies:
             if company.price_change is not None:
-                price_changes.append((company ,company.price_change))
+                price_changes.append((company, company.price_change))
         return sorted(price_changes, key=lambda item: item[1][1],
-        reverse=True)
+                      reverse=True)
 
     @property
     def gainers(self):
@@ -271,9 +285,10 @@ class SecuritiesExchange(models.Model):
         """
         losers = self.price_changes()[-5:]
         for loser in losers:
-            if loser[1][0] > 0 : losers.remove(loser)
+            if loser[1][0] > 0:
+                losers.remove(loser)
         losers = [(loser[0], (abs(loser[1][0]), abs(loser[1][1]))) for loser in losers]
-        losers = sorted(losers, key=lambda x:x[1][1], reverse=True)
+        losers = sorted(losers, key=lambda x: x[1][1], reverse=True)
         return losers
 
     @property
@@ -287,5 +302,11 @@ class SecuritiesExchange(models.Model):
             if company.latest_trading_volume is not None:
                 volumes.append(company)
         return sorted(volumes,
-                        key=lambda company:company.latest_trading_volume,
-                        reverse=True)[:5]
+                      key=lambda company: company.latest_trading_volume,
+                      reverse=True)[:5]
+
+    def get_absolute_url(self):
+        """Return the url to a instance of a security exhange
+        """
+        return reverse("bourse_summary", kwargs={"country": "ke",
+                                                 "bourse": self.slug})
