@@ -41,5 +41,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(api_urlpatterns)),
     path("stock-trading/", include(stock_trading_urls), name="stock_trading"),
-    path("contact", include(contact_urls), name="contact_urls")
+    # path("contact", include(contact_urls), name="contact_urls")
 ]
