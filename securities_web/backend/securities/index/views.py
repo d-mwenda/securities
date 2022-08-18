@@ -20,7 +20,12 @@ class RobotsView(View):
     """View to render robots.txt file"""
     lines = [
         "User-Agent: *",
-        "Allow: /"
+        "Allow: /",
+        "",
+        "User-Agent: *",
+        "Disallow: /api/",
+        "",
+        "Sitemap: https://allafricasecurities.com/sitemap.xml",
     ]
 
     def get(self, request):
