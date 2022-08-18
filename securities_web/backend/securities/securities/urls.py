@@ -20,7 +20,7 @@ from django.contrib.sitemaps.views import sitemap
 from index.urls import urlpatterns as index_urls
 from stock_trading.urls import urlpatterns as stock_trading_urls
 from stock_trading.urls import api_urlpatterns as stock_trading_api_urls
-from contact.urls import url_patterns as contact_urls
+# from contact.urls import url_patterns as contact_urls
 from stock_trading.sitemaps import CompanySitemap, SecuritiesExchangeSitemap
 from index.sitemaps import StaticViewsSitemap
 
